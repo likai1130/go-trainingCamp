@@ -15,11 +15,7 @@
 
 2. 我使用的是mongodb，所以用的是官方mongdb-driver，官方源码中mongo.errors包定义了CRUD返回的错误。
 
-    ```
-   // ErrNoDocuments is returned by SingleResult methods when the operation that created the SingleResult did not return
-   // any documents.
-   var ErrNoDocuments = errors.New("mongo: no documents in result")
-   
+    ```go
     // ErrNilDocument is returned when a nil document is passed to a CRUD method.
     var ErrNilDocument = errors.New("document is nil")
     
@@ -37,9 +33,11 @@
     ```
 
     在mongodb中ErrNoDocuments错误类型和 sql.ErrNoRows是一样的，我就以mongodb为例子了。在mongdb-driver源码中，single_result.go文件中定义了ErrNoDocuments类型，这是一个全局的错误类型，可以在DAO中返回的错误类型中进行断言，然后打印日志做降级处理。
-      
-   ```
-   var ErrNoDocuments = errors.New("mongo: no documents in result")
+   single_result.go文件：
+   ```go
+    // ErrNoDocuments is returned by SingleResult methods when the operation that created the SingleResult did not return
+   // any documents.
+    var ErrNoDocuments = errors.New("mongo: no documents in result")
    ```
    我demo片段代码
 
@@ -52,7 +50,7 @@
           result := collection.FindOne(ctx, params)
           if result.Err() != nil {
               //"数据找不到"的错误，降级
-              if !errors.Is(result.Err(), mongo.ErrNoDocuments) {
+              if errors.Is(result.Err(), mongo.ErrNoDocuments) {
                   log.Println(errors.WithMessage(err,"dao not find data").Error())
                   return userData, nil
               }
