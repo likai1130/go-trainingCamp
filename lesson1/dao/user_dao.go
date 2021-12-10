@@ -8,6 +8,7 @@ import (
 	"go-trainingCamp/lesson1/entity"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
+	"log"
 	"time"
 )
 
@@ -93,8 +94,20 @@ func (u *userDao) FindOne(params bson.M)(userData entity.UserData, err error){
 	collection := u.cli.Database(MONGODB_DATABASE).Collection(MONGODB_DATABASE_COLLECT)
 	result := collection.FindOne(ctx, params)
 	if result.Err() != nil {
+		//"数据找不到"的错误，降级
+		if errors.Is(result.Err(), mongo.ErrNoDocuments) {
+			var k string
+			var v interface{}
+			for key,value := range params {
+				k = key
+				v = value
+			}
+			log.Println(errors.WithMessagef(result.Err(),"not find data by [%s = %v]",k,v).Error())
+			return userData, nil
+		}
 		return userData,errors.Wrap(result.Err(),"find one error")
 	}
+
 	user := entity.UserData{}
 	if err = result.Decode(&user); err != nil {
 		return userData,errors.Wrap(err,"find one result.Decode error")

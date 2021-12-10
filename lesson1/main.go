@@ -85,6 +85,11 @@ func integrationTest() {
 	log.Printf("第三步，查询结果：user = %s \n",string(marshal))
 	return
 
+	// 第三步 output：
+	//	....
+	// 2021/12/10 23:58:07 dao not find dat by [name = zhangsan]: mongo: no documents in result
+	// 2021/12/10 23:58:07 第三步，查询结果：user = {"id":"","name":"","number":0,"age":0,"birthMonth":0}
+
 }
 
 func main() {

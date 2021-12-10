@@ -1,10 +1,8 @@
 package service
 
 import (
-	"github.com/pkg/errors"
 	"go-trainingCamp/lesson1/dao"
 	"go-trainingCamp/lesson1/entity"
-	"go.mongodb.org/mongo-driver/mongo"
 )
 
 type UserService interface {
@@ -28,12 +26,7 @@ func (u userService) FindUsers() (users []entity.UserData, err error) {
 }
 
 func (u userService) FindUser(filter map[string]interface{}) (user entity.UserData, err error) {
-	user, err = u.userDao.FindOne(filter)
-	//"数据找不到"的错误，降级
-	if !errors.Is(errors.Cause(err), mongo.ErrNoDocuments) {
-		return user, err
-	}
-	return user, nil
+	return u.userDao.FindOne(filter)
 }
 
 func NewUserService() (userSvc UserService, err error) {
