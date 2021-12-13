@@ -29,7 +29,7 @@ func (u userService) FindUsers() (users []entity.UserData, err error) {
 
 func (u userService) FindUser(filter map[string]interface{}) (user entity.UserData, err error) {
 	user, err = u.userDao.FindOne(filter)
-	b, _ := dao.NewDbError().IsErrNoDocuments(err)
+	b := dao.IsErrNoDocuments(err)
 	if b {
 		//数据不存在的处理
 		var k string
