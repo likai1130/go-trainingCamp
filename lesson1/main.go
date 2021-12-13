@@ -42,6 +42,7 @@ func initUsersData() []entity.UserData {
 	}
 
 }
+
 /**
 	联合测试(模拟业务)
 当这个调用方为上层服务
@@ -49,7 +50,7 @@ func initUsersData() []entity.UserData {
 1. 插入3条数据
 2. 查询全部
 3. 查询一条不存在的数据
- */
+*/
 func integrationTest() {
 	usersData := initUsersData()
 
@@ -57,20 +58,20 @@ func integrationTest() {
 	count, err := userSvc.InsertUserMany(usersData)
 	if err != nil {
 		//记录日志
-		log.Printf("第一步，批量插入数据失败: %+v \n",err)
+		log.Printf("第一步，批量插入数据失败: %+v \n", err)
 		return
 	}
-	log.Printf("第一步，插入%d条数据成功\n",count)
+	log.Printf("第一步，插入%d条数据成功\n", count)
 
 	//2. 查询所有数据
 	users, err := userSvc.FindUsers()
 	if err != nil {
 		//记录日志
-		log.Printf("第二步，查询所有数据失败: %+v \n",err)
+		log.Printf("第二步，查询所有数据失败: %+v \n", err)
 		return
 	}
 	marshal, _ := json.Marshal(users)
-	log.Printf("第二步，查询所有user数据成功。users = %s \n",string(marshal))
+	log.Printf("第二步，查询所有user数据成功。users = %s \n", string(marshal))
 
 	//3. 查询某个数据
 	filter := map[string]interface{}{}
@@ -78,18 +79,12 @@ func integrationTest() {
 	user, err := userSvc.FindUser(filter)
 
 	if err != nil {
-		log.Printf("第三步，查询zhangsan失败: %s \n",err.Error())
+		log.Printf("第三步，查询zhangsan失败: %s \n", err.Error())
 		return
 	}
 	marshal, _ = json.Marshal(user)
-	log.Printf("第三步，查询结果：user = %s \n",string(marshal))
+	log.Printf("第三步，查询结果：user = %s \n", string(marshal))
 	return
-
-	// 第三步 output：
-	//	....
-	// 2021/12/10 23:58:07 dao not find dat by [name = zhangsan]: mongo: no documents in result
-	// 2021/12/10 23:58:07 第三步，查询结果：user = {"id":"","name":"","number":0,"age":0,"birthMonth":0}
-
 }
 
 func main() {

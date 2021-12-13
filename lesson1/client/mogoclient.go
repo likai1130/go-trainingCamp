@@ -9,15 +9,16 @@ import (
 	"time"
 )
 
-const MONGODB_CONNECT_TIMEOUT  = 10 * time.Second
+const MONGODB_CONNECT_TIMEOUT = 10 * time.Second
 
 var cli *mongo.Client
 var once sync.Once
+
 func NewMongoClient() (mongoCli *mongo.Client, err error) {
 	if cli == nil {
 		client, err := setUp()
 		if err != nil {
-			return nil, errors.Wrap(err,"NewMongoClient error")
+			return nil, errors.Wrap(err, "NewMongoClient error")
 		}
 		cli = client
 	}
@@ -29,7 +30,7 @@ func setUp() (mongoCli *mongo.Client, err error) {
 	defer cancelFunc()
 
 	clientOptions := options.Client().SetHosts([]string{"127.0.0.1:27017"}).
-		SetMaxPoolSize(100).         //最大连接数量
+		SetMaxPoolSize(100).                        //最大连接数量
 		SetConnectTimeout(MONGODB_CONNECT_TIMEOUT). //连接超时20s
 		SetAuth(options.Credential{Username: "mongoadmin", Password: "secret"})
 	client, err := mongo.Connect(ctx, clientOptions)

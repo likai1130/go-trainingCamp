@@ -1,8 +1,10 @@
 package service
 
 import (
+	"github.com/pkg/errors"
 	"go-trainingCamp/lesson1/dao"
 	"go-trainingCamp/lesson1/entity"
+	"log"
 )
 
 type UserService interface {
@@ -26,7 +28,20 @@ func (u userService) FindUsers() (users []entity.UserData, err error) {
 }
 
 func (u userService) FindUser(filter map[string]interface{}) (user entity.UserData, err error) {
-	return u.userDao.FindOne(filter)
+	user, err = u.userDao.FindOne(filter)
+	b, _ := dao.NewDbError().IsErrNoDocuments(err)
+	if b {
+		//数据不存在的处理
+		var k string
+		var v interface{}
+		for key, value := range filter {
+			k = key
+			v = value
+		}
+		log.Printf("data not find. params is [%s = %v].Cause: %s\n", k, v, errors.Cause(err).Error())
+		return user, nil
+	}
+	return user, err
 }
 
 func NewUserService() (userSvc UserService, err error) {

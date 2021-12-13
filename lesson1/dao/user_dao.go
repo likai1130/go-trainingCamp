@@ -8,7 +8,6 @@ import (
 	"go-trainingCamp/lesson1/entity"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"log"
 	"time"
 )
 
@@ -36,7 +35,7 @@ func NewUserDao() (dao UserDao, err error) {
 	}
 	client, err := mclient.NewMongoClient()
 	if err != nil {
-		return userDaoInstance, errors.WithMessage(err,"NewUserDao err")
+		return userDaoInstance, errors.WithMessage(err, "NewUserDao err")
 	}
 	userDaoInstance = &userDao{
 		cli: client,
@@ -65,52 +64,41 @@ func (u *userDao) InsertMany(userDatas []entity.UserData) (count int, err error)
 /**
 查询
 */
-func (u *userDao) FindAll()(userData []entity.UserData,err error){
+func (u *userDao) FindAll() (userData []entity.UserData, err error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), MONGODB_CONNECT_TIMEOUT)
 	defer cancelFunc()
 	collection := u.cli.Database(MONGODB_DATABASE).Collection(MONGODB_DATABASE_COLLECT)
 
-	results, err := collection.Find(ctx,bson.M{})
+	results, err := collection.Find(ctx, bson.M{})
 	if err != nil {
-		return userData,errors.Wrap(err,"findAll error")
+		return userData, errors.Wrap(err, "findAll error")
 	}
 	if results.Err() != nil {
-		return userData,errors.Wrap(results.Err(),"findAll error")
+		return userData, errors.Wrap(results.Err(), "findAll error")
 	}
 
 	data := []entity.UserData{}
 	err = results.All(ctx, &data)
 	if err != nil {
-		return userData,errors.WithMessage(err,"findAll results.All error")
+		return userData, errors.WithMessage(err, "findAll results.All error")
 	}
 	results.Close(ctx)
-	return data,err
+	return data, err
 }
 
-func (u *userDao) FindOne(params bson.M)(userData entity.UserData, err error){
+func (u *userDao) FindOne(params bson.M) (userData entity.UserData, err error) {
 	ctx, cancelFunc := context.WithTimeout(context.Background(), MONGODB_CONNECT_TIMEOUT)
 	defer cancelFunc()
 
 	collection := u.cli.Database(MONGODB_DATABASE).Collection(MONGODB_DATABASE_COLLECT)
 	result := collection.FindOne(ctx, params)
 	if result.Err() != nil {
-		//"数据找不到"的错误，降级
-		if errors.Is(result.Err(), mongo.ErrNoDocuments) {
-			var k string
-			var v interface{}
-			for key,value := range params {
-				k = key
-				v = value
-			}
-			log.Println(errors.WithMessagef(result.Err(),"not find data by [%s = %v]",k,v).Error())
-			return userData, nil
-		}
-		return userData,errors.Wrap(result.Err(),"find one error")
+		return userData, errors.Wrap(result.Err(), "find one error")
 	}
 
 	user := entity.UserData{}
 	if err = result.Decode(&user); err != nil {
-		return userData,errors.Wrap(err,"find one result.Decode error")
+		return userData, errors.Wrap(err, "find one result.Decode error")
 	}
-	return user,err
+	return user, err
 }
