@@ -30,9 +30,10 @@ import (
 	内部通过context.Background()创建了一个WithCancel，并将这个WithCancel的ctx返回，把Cancel封装起来用来取消上下文。
 	内部使用sync.Once，一组goroutine的第一个error进行错误处理，只处理一次，即：调用ctx.CancelFunc
 	group.Wait()等待所有goroutine结束后，再次调用g.cancel()并且返回第一个发生的错误。
-
-
- */
+	遗留问题：
+		errgroup源码中为什么要做两次cancel，在group.Go()方法中的once方法中调用了一次g.cancel()，在group.wait()中调用了一次g.cancel()，
+	对于同一个错误只cancel一次不就可以了么，我是用debug打断点的时候看到的。
+*/
 func main() {
 	group, ctx := errgroup.WithContext(context.Background()) //创建errgroup，返回子ctx
 	//创建http服务器并且监听8080端口
@@ -46,7 +47,7 @@ func main() {
 	mux.HandleFunc("/shutdown", func(writer http.ResponseWriter, request *http.Request) {
 		shutdownSignal <- struct{}{}
 	})
-	server := &http.Server{Addr: ":8080",Handler: mux}
+	server := &http.Server{Addr: ":8080", Handler: mux}
 
 	//goroutine1 启动httpserver
 	//模拟g1退出方法: 把Addr定义成字符串，g1就会启动http server失败。
@@ -62,7 +63,7 @@ func main() {
 	//g2 会调用Shutdown方法退出，因为server shutdown，所以接着g1退出；因为g2退出后，context不再阻塞，所以g3退出
 	group.Go(func() error {
 		select {
-		case <- ctx.Done():
+		case <-ctx.Done():
 			log.Println("errgroup exited1")
 		case <-shutdownSignal:
 			log.Println("http server shutdown ... ")
@@ -75,16 +76,15 @@ func main() {
 	//g3退出后，context不再阻塞了，g2会退出，退出时调用了shutdown，然后g1随之退出。
 	group.Go(func() error {
 		signals := make(chan os.Signal, 1)
-		signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM,syscall.SIGKILL)
+		signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
 		select {
-		case <- ctx.Done():
+		case <-ctx.Done():
 			log.Println("errgroup exited2")
 			return ctx.Err()
-		case  sig := <- signals:
+		case sig := <-signals:
 			return errors.Errorf("get os signal: %v", sig)
 		}
 	})
 
-	log.Printf("all go routine exited %+v\n",group.Wait())
+	log.Printf("all go routine exited %+v\n", group.Wait())
 }
-
