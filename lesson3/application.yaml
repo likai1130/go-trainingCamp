@@ -1,0 +1,26 @@
+server:
+  ## 若port不设置值，默认为8188，这个值必须
+  port: 8188
+  ##应用的访问的根目录
+  contextPath: /
+  dataPath: data
+  pprof: true
+  pprofPort: 9123
+
+logger:
+  #gin模式
+  mode: debug
+  #日志级别
+  level: debug
+  #是否写入到文件
+  isOutPutFile: false
+  #保存期限
+  maxAgeDay: 7
+  #按天保存
+  rotationTime: 1
+
+mongodb:
+  hosts: ["127.0.0.1:27017"]
+  maxPoolSize: 100
+  userName: ""
+  password: ""
