@@ -2,9 +2,9 @@ package bootstrap
 
 import (
 	"github.com/gin-gonic/gin"
-	"lesson3/middlewares/crossdomain"
-	"lesson3/middlewares/logging"
-	"lesson3/middlewares/metrics"
+	"go-trainingCamp/lesson3/middlewares/crossdomain"
+	"go-trainingCamp/lesson3/middlewares/logging"
+	"go-trainingCamp/lesson3/middlewares/metrics"
 	"time"
 )
 

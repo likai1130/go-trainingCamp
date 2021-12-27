@@ -28,6 +28,7 @@ func init() {
 	index := strings.LastIndex(path, string(os.PathSeparator))
 	//完成了目录的获取，接下来再拼接上我们实际的配置文件就可以了
 	path = path[:index]
+
 	// 加载公共信息语言包文件
 	bundle.MustLoadMessageFile(path + "/tomls/nft.en.toml")
 	bundle.MustLoadMessageFile(path + "/tomls/nft.zh-cn.toml")

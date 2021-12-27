@@ -11,3 +11,7 @@ InternalError        = "内部错误"
 StatusBadGateway	 = "网关异常"
 StatusServiceUnavailable = "服务异常"
 StatusGatewayTimeout = "连接超时"
+
+
+DBError = "操作数据库失败"
+NotDocument = "未查询到相关数据"

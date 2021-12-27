@@ -3,8 +3,8 @@ package logger
 import (
 	"github.com/kataras/golog"
 	"github.com/lestrrat-go/file-rotatelogs"
+	"go-trainingCamp/lesson3/config"
 	"io"
-	"lesson3/config"
 	"os"
 	"path"
 	"path/filepath"

@@ -2,8 +2,8 @@ package app
 
 import (
 	"github.com/gin-gonic/gin"
-	"lesson3/common/e"
-	"lesson3/pkg/i18n"
+	"go-trainingCamp/lesson3/common/e"
+	"go-trainingCamp/lesson3/i18n"
 )
 
 type Response struct {
@@ -22,8 +22,7 @@ type ResponseI18nMsgParams struct {
 	PluralCount  interface{}  `json:"plural_count"`
 }
 
-func NewResponse(respi18n ResponseI18nMsgParams) {
-	c := respi18n.C
+func NewResponse(respi18n ResponseI18nMsgParams,c *gin.Context) {
 	code := respi18n.Code
 	httpCode := getHttpCode(code)
 	templateData := respi18n.TemplateData
@@ -63,4 +62,12 @@ func getHttpCode(code string) int {
 	}
 
 	return e.MsgFlags[e.InternalError]
+}
+
+func NewI18nResponse(code string, data interface{}, err error) ResponseI18nMsgParams {
+	return ResponseI18nMsgParams{
+		Code: code,
+		Err:  err,
+		Data: data,
+	}
 }

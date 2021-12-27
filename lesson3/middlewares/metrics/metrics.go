@@ -5,7 +5,7 @@ import (
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"github.com/paradeum-team/gin-prometheus-ext"
-	"lesson3/config"
+	"go-trainingCamp/lesson3/config"
 	"net/http"
 	"strings"
 )

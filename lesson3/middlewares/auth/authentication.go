@@ -2,9 +2,9 @@ package auth
 
 import (
 	"github.com/gin-gonic/gin"
-	"lesson3/common/app"
-	"lesson3/common/e"
-	"lesson3/common/logger"
+	"go-trainingCamp/lesson3/common/app"
+	"go-trainingCamp/lesson3/common/e"
+	"go-trainingCamp/lesson3/common/logger"
 )
 
 /**

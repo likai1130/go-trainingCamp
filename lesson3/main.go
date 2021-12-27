@@ -2,11 +2,11 @@ package main
 
 import (
 	"fmt"
-	"lesson3/bootstrap"
-	"lesson3/config"
-	"lesson3/middlewares/logging"
-	mongodb "lesson3/pkg/mongdb"
-	"lesson3/web/router"
+	"go-trainingCamp/lesson3/bootstrap"
+	"go-trainingCamp/lesson3/config"
+	mongodb "go-trainingCamp/lesson3/internal/pkg/mongdb"
+	"go-trainingCamp/lesson3/middlewares/logging"
+	"go-trainingCamp/lesson3/web/router"
 )
 
 func init() {

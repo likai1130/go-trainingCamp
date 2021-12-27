@@ -1,0 +1,170 @@
+definitions:
+  app.Response:
+    properties:
+      code:
+        type: string
+      data: {}
+      err_detail:
+        type: string
+      msg:
+        type: string
+    type: object
+  vo.UserParams:
+    properties:
+      age:
+        type: integer
+      name:
+        type: string
+      sex:
+        type: integer
+    type: object
+info:
+  contact: {}
+  termsOfService: https://github.com/likai1130/go-example
+paths:
+  /v1/user:
+    post:
+      consumes:
+      - application/json
+      description: 新增用户
+      parameters:
+      - description: 国际化字段
+        in: header
+        name: lang
+        type: string
+      - description: 用户对象
+        in: body
+        name: userParams
+        required: true
+        schema:
+          $ref: '#/definitions/vo.UserParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: 新增用户
+      tags:
+      - user
+  /v1/user/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: 删除用户
+      parameters:
+      - description: 国际化字段
+        in: header
+        name: lang
+        type: string
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: 删除用户
+      tags:
+      - user
+    get:
+      consumes:
+      - application/json
+      description: 查询用户
+      parameters:
+      - description: 国际化字段
+        in: header
+        name: lang
+        type: string
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: 查询用户
+      tags:
+      - user
+    put:
+      consumes:
+      - application/json
+      description: 更新用户
+      parameters:
+      - description: 国际化字段
+        in: header
+        name: lang
+        type: string
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: 用户对象
+        in: body
+        name: userParams
+        required: true
+        schema:
+          $ref: '#/definitions/vo.UserParams'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: 更新用户
+      tags:
+      - user
+  /v1/users:
+    get:
+      consumes:
+      - application/json
+      description: 用户列表
+      parameters:
+      - description: 国际化字段
+        in: header
+        name: lang
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.Response'
+      summary: 用户列表
+      tags:
+      - user
+swagger: "2.0"

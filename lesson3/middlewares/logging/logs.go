@@ -3,9 +3,9 @@ package logging
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go-trainingCamp/lesson3/common/logger"
+	"go-trainingCamp/lesson3/config"
 	"io"
-	"lesson3/common/logger"
-	"lesson3/config"
 )
 
 /**

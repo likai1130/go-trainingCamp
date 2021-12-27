@@ -11,3 +11,6 @@ InternalError        = "Internal Server Error"
 StatusBadGateway	 = "Bad Gateway"
 StatusServiceUnavailable = "Service Unavailable"
 StatusGatewayTimeout = "Gateway Timeout"
+
+DBError = "Failed to operate database"
+NotDocument = "No relevant data found"

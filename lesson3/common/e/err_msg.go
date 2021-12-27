@@ -19,4 +19,9 @@ var MsgFlags = map[string](int){
 	StatusServiceUnavailable: http.StatusServiceUnavailable,  //服务异常	503
 	StatusGatewayTimeout:     http.StatusGatewayTimeout,      //超时		504
 
+	//数据库错误码
+	DBError: http.StatusInternalServerError, //DB 内部异常 500
+	NotDocument: http.StatusOK, //请求成功，无数据 200
+
+
 }

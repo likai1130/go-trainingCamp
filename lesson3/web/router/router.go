@@ -3,10 +3,11 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/example/basic/docs"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
-	"lesson3/bootstrap"
-	"lesson3/config"
+	"go-trainingCamp/lesson3/bootstrap"
+	"go-trainingCamp/lesson3/config"
+	"go-trainingCamp/lesson3/docs"
+	"go-trainingCamp/lesson3/web/api"
 	"strings"
 )
 
@@ -35,5 +36,12 @@ func Configure(r *bootstrap.Bootstrapper) {
   配置具体的路由信息
 */
 func concreteRouter(rootRouter *gin.RouterGroup) {
+	v1 := rootRouter.Group("v1")
+
+	v1.GET("/users", api.ListUsers)
+	v1.POST("/user", api.SaveUser)
+	v1.GET("/user/:id", api.GetUserById)
+	v1.DELETE("/user/:id", api.RemoveUser)
+	v1.PUT("/user/:id", api.UpdateUser)
 
 }

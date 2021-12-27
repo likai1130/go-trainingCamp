@@ -18,4 +18,7 @@ const (
 	StatusBadGateway         = "StatusBadGateway"
 	StatusServiceUnavailable = "StatusServiceUnavailable"
 	StatusGatewayTimeout     = "StatusGatewayTimeout"
+
+	DBError         = "DBError"
+	NotDocument = "NotDocument"
 )
