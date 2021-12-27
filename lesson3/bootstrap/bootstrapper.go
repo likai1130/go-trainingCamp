@@ -1,10 +1,18 @@
 package bootstrap
 
 import (
+	"context"
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
+	"go-trainingCamp/lesson3/common/logger"
 	"go-trainingCamp/lesson3/middlewares/crossdomain"
 	"go-trainingCamp/lesson3/middlewares/logging"
 	"go-trainingCamp/lesson3/middlewares/metrics"
+	"golang.org/x/sync/errgroup"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 	"time"
 )
 
@@ -54,6 +62,39 @@ func (b *Bootstrapper) Bootstrap() *Bootstrapper {
 	return b
 }
 
+//优雅终止
 func (b *Bootstrapper) Listen(addr string, cfgs ...Configurator) {
-	b.Run(addr)
+	server := &http.Server{
+		Addr:    addr,
+		Handler: b,
+	}
+	group, ctx := errgroup.WithContext(context.Background())
+	group.Go(func() error {
+		logger.GetLogger().Info("server start ...")
+		return server.ListenAndServe()
+	})
+
+	group.Go(func() error {
+		select {
+		case <-ctx.Done():
+			logger.GetLogger().Errorf("server shut down  ...")
+			return server.Shutdown(ctx)
+		}
+	})
+
+	group.Go(func() error {
+			signals := make(chan os.Signal, 1)
+			signal.Notify(signals, syscall.SIGINT, syscall.SIGTERM, syscall.SIGKILL)
+			select {
+			case <-ctx.Done():
+				return ctx.Err()
+			case sig := <-signals:
+				return errors.Errorf("get os signal: %v", sig)
+			}
+	})
+
+	err := group.Wait()
+	logger.GetLogger().Errorf("server down err: %v", err)
+
+	//b.Run(addr)
 }
